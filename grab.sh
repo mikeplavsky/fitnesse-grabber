@@ -7,4 +7,6 @@ wget --page-requisites \
      --no-parent \
      -r -l 2 -nH \
      --adjust-extension \
-     --reject-regex '.*purge.* | .*suite$' $URL
+     --reject-regex \
+     '.*\?suite$|.*\?test$|.*\?whereUsed|.*remote_debug|.*purge.*|.*\?search$' \
+     $URL
