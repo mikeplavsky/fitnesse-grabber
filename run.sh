@@ -1,4 +1,7 @@
-docker run -ti --rm -v $(pwd):/grabber \
+set -euo pipefail
+
+URL=$1
+
+docker run --rm -v $(pwd):/grabber \
         -w /grabber \
-        --name=grabber grabber \
-        bash  
+        --name=grabber grabber bash ./grab.sh $URL
