@@ -8,14 +8,13 @@ echo $R_TESTS
 
 rm -r result || true
 
-REGEX='.*\?suite$|.*\?test$|.*\?whereUsed|.*remote_debug|.*purge.*|.*\?search$|.*UserGuide$|.*\?search$|.*RecentChanges$|.*\?refactor.*|.*\?delete.*|.*\?responder.*|.*\?new.|.*\?edit.*|.*\?versions.*|.*\?properties.*'
+REGEX='.*\?suite$|.*\?test$|.*\?whereUsed|.*remote_debug|.*purge.*|.*\?search$|.*UserGuide$|.*\?search$|.*RecentChanges$|.*\?refactor.*|.*\?delete.*|.*\?responder.*|.*\?new.|.*\?edit.*|.*\?versions.*|.*\?properties.*|.*testResults.*'
 
 wget --page-requisites \
      --directory-prefix=result \
      --convert-links \
-     --no-parent \
-     -r -l 3 -nH \
+     -r -nH \
      --adjust-extension \
-     --accept-regex "$R_TESTS($|\?|\.)|files" \
+     --accept-regex "$R_TESTS\$|$R_TESTS\..*|$R_TESTS\?.*|files" \
      --reject-regex $REGEX \
      $URL
