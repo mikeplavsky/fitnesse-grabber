@@ -1,7 +1,6 @@
 set -euo pipefail
 
 URL=$1
-FILES=`dirname $1`/files/
 
 R_TESTS=`echo $1 | sed 's/\./\\\\./g' | sed 's/\//\\\\\//g'`
 echo $R_TESTS
