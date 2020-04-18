@@ -15,6 +15,6 @@ wget --page-requisites \
      --convert-links \
      -r -nH \
      --adjust-extension \
-     --accept-regex "$R_TESTS\$|$R_TESTS\..*|$R_TESTS\?.*|files" \
+     --accept-regex "$R_TESTS\$|$R_TESTS\..*|$R_TESTS\?.*|files\/fitnesse" \
      --reject-regex $REGEX \
      $URL
