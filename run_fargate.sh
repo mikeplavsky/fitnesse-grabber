@@ -5,7 +5,7 @@ URL=$1
 aws ecs run-task \
      --capacity-provider-strategy capacityProvider=FARGATE,weight=1 \
      --cluster FitnesseFargate \
-     --task-definition fitnesse-grabber:9 \
+     --task-definition fitnesse-grabber:10 \
      --network-configuration \
      "awsvpcConfiguration=\
          {subnets=[subnet-572af478],\
