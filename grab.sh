@@ -17,3 +17,5 @@ wget --page-requisites \
      --accept-regex "$R_TESTS\$|$R_TESTS\..*|$R_TESTS\?.*|files\/fitnesse" \
      --reject-regex $REGEX \
      $URL
+
+aws s3 sync result/ s3://rmad-fitnesse-results
