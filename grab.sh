@@ -21,6 +21,7 @@ wget --page-requisites \
      --adjust-extension \
      --accept-regex "$R_TESTS\$|$R_TESTS\..*|$R_TESTS\?.*|files\/fitnesse" \
      --reject-regex $REGEX \
-     $URL
+     $URL || true
 
+echo "copying to S3 ..."
 aws s3 sync result/ s3://rmad-fitnesse-results/$S3_DIR/$DATE
