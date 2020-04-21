@@ -2,10 +2,17 @@ set -euo pipefail
 
 URL=$1
 
+S3_DIR=`dirname $URL | sed 's/^.*\\/\\///' | sed 's/:.*//'`
+DATE=`date -u +%Y_%m%d_%H%M_%S`
+DIR=$S3_DIR/$DATE
+
+S3_URL='https://rmad-fitnesse-results.s3.amazonaws.com/'
+TEST=`basename $URL`
+
 aws ecs run-task \
      --capacity-provider-strategy capacityProvider=FARGATE,weight=1 \
      --cluster FitnesseFargate \
-     --task-definition fitnesse-grabber:10 \
+     --task-definition fitnesse-grabber:11 \
      --network-configuration \
      "awsvpcConfiguration=\
          {subnets=[subnet-572af478],\
@@ -14,6 +21,9 @@ aws ecs run-task \
      --overrides \
      "containerOverrides=\
          [{name=fitnesse-grabber,\
-           command=[bash,./grab.sh,$URL]}]" \
+           command=[bash,./grab.sh,$URL,$DIR]}]" \
      --count 1 \
      --region us-east-1
+
+echo $S3_URL$DIR/$TEST.html
+

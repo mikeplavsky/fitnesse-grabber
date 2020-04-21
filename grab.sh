@@ -1,14 +1,10 @@
 set -euo pipefail
 
 URL=$1
+DIR=$2
 
 R_TESTS=`echo $1 | sed 's/\./\\\\./g' | sed 's/\//\\\\\//g'`
-S3_DIR=`dirname $URL | sed 's/^.*\\/\\///' | sed 's/:.*//'`
-DATE=`date +%Y_%m%d_%H%M_%S`
-
 echo $R_TESTS
-echo $S3_DIR
-echo $DATE
 
 rm -r result || true
 
@@ -24,4 +20,4 @@ wget --page-requisites \
      $URL || true
 
 echo "copying to S3 ..."
-aws s3 sync result/ s3://rmad-fitnesse-results/$S3_DIR/$DATE
+aws s3 sync result/ s3://rmad-fitnesse-results/$DIR
