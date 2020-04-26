@@ -5,9 +5,13 @@ def lambda_main(url, dir):
 
    ecs.run_task(
 
+       capacityProviderStrategy = [dict(
+           capacityProvider='FARGATE',
+           weight=1
+       )],
+
        cluster="FitnesseFargate",
        count=1,
-       launchType="FARGATE",
 
        networkConfiguration=dict(
            awsvpcConfiguration=dict(
