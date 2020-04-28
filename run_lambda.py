@@ -1,7 +1,7 @@
 import boto3
 ecs = boto3.client('ecs')
 
-def lambda_main(url, dir):
+def main(url, dir):
 
    ecs.run_task(
 
@@ -36,6 +36,6 @@ if __name__ == "__main__":
         print(f'Need URL and DIR')
         exit(-1)
 
-    lambda_main(argv[1], argv[2])
+    main(argv[1], argv[2])
 
 

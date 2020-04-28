@@ -3,8 +3,8 @@ set -euo pipefail
 URL=$1
 
 S3_DIR=`dirname $URL | sed 's/^.*\\/\\///' | sed 's/:.*//'`
-DATE=`date -u +%Y_%m%d_%H%M_%S`
-DIR=$S3_DIR/$DATE
+DATE=`date -u +%Y-%m-%dT%H:%M:%S.%3NZ`
+DIR=$DATE
 
 S3_URL='https://rmad-fitnesse-results.s3.amazonaws.com/'
 TEST=`basename $URL`
