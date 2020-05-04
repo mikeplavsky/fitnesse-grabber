@@ -1,0 +1,35 @@
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+
+<div id="app">
+    <span v-if="localhost">
+        For saving to S3 the full builder name must be used - localhost can't be used.
+    </span>
+    <span v-else>
+        <a v-bind:href="s3_url">S3</a> will be ready in 2-5 min.
+        Until it it is not <a v-bind:href="s3_url">S3</a> will say Access Denied. 
+    </span>
+</div>
+
+<script>
+
+    const params = new URLSearchParams(window.location.search);
+    const query = params.get("url");
+
+    const idx = query.lastIndexOf("?");
+    const test = idx == -1 ? query : query.substr(0,idx);
+
+    const url = new URL(test);
+    const prefix = (new Date()).toISOString();
+
+    const s3 = "https://rmad-fitnesse-results.s3.amazonaws.com/";
+    const s3_url = `${s3}${prefix}${url.pathname}.html`;
+
+    const app = new Vue({
+        el: "#app",
+        data: {
+            s3_url: s3_url,		
+            localhost: url.host.startsWith("localhost")
+        }});
+
+</script>
+
