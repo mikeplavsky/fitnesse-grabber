@@ -1,0 +1,43 @@
+<a href="javascript:saveThePage()">[Save]</a>
+
+<script>
+    
+    function saveThePage(){
+    
+        const href = new URLSearchParams(window.location.href);
+
+        const idx = href.lastIndexOf("?");
+        const test = idx == -1 ? href : href.substr(0,idx);
+
+        const url = new URL(test);
+        const prefix = (new Date()).toISOString();
+
+        const s3 = "https://rmad-fitnesse-results.s3.amazonaws.com/";
+        const s3_url = `${s3}${prefix}${url.pathname}.html`;
+
+        const localhost = url.host.startsWith("localhost");
+    
+        if (localhost) {
+            alert("For saving to S3 the full builder name must be used.")
+            return;
+        }
+    
+        fetch(
+            "https://3gcz9n84yb.execute-api.us-east-1.amazonaws.com/default/fitnesse-grabber",
+            {
+                method: "POST",
+                mode: "no-cors",
+                
+                headers: {
+                    "Accept" : "application/json",
+                    'Content-Type': 'application/json'},
+                    
+                body: JSON.stringify({
+                    url: url.href,
+                    dir: prefix })});        
+
+        window.open(s3_url);       
+
+    }
+    
+</script>
