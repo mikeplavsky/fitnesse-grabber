@@ -13,7 +13,7 @@
     <div id="app" class="container">
 
         <p v-if="localhost" >
-            For saving to S3 the full builder name must be used - localhost can't be used.
+            For saving to S3 the full builder name must be used - <i>localhost</i> will not work.
         </p>
         <p v-else>
             <a v-bind:href="s3_url">S3</a> will be ready in 2-5 min.
@@ -38,11 +38,31 @@
     const s3 = "https://rmad-fitnesse-results.s3.amazonaws.com/";
     const s3_url = `${s3}${prefix}${url.pathname}.html`;
 
+    const localhost = url.host.startsWith("localhost");
+
+    if (!localhost) {
+
+        fetch(
+            "https://3gcz9n84yb.execute-api.us-east-1.amazonaws.com/default/fitnesse-grabber",
+            {
+                method: "POST",
+                mode: "no-cors",
+
+                headers: {
+                    "Accept" : "application/json",
+                    'Content-Type': 'application/json'},
+
+                body: JSON.stringify({
+                    url: url.href,
+                    dir: prefix })});  
+
+    }
+
     const app = new Vue({
         el: "#app",
         data: {
             s3_url: s3_url,		
-            localhost: url.host.startsWith("localhost")
+            localhost
         }});
 
 </script>
