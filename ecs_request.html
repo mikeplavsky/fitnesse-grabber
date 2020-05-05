@@ -1,14 +1,28 @@
-<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<head>
 
-<div id="app">
-    <span v-if="localhost">
-        For saving to S3 the full builder name must be used - localhost can't be used.
-    </span>
-    <span v-else>
-        <a v-bind:href="s3_url">S3</a> will be ready in 2-5 min.
-        Until it it is not <a v-bind:href="s3_url">S3</a> will say Access Denied. 
-    </span>
-</div>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+
+</head>
+
+<body class="jumbotron">
+
+    <div id="app" class="container">
+
+        <p v-if="localhost" >
+            For saving to S3 the full builder name must be used - localhost can't be used.
+        </p>
+        <p v-else>
+            <a v-bind:href="s3_url">S3</a> will be ready in 2-5 min.
+            Until it it is not <a v-bind:href="s3_url">S3</a> will say Access Denied. 
+        </p>
+
+    </div>
+
+</body>
 
 <script>
 
