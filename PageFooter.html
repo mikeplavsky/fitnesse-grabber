@@ -4,7 +4,7 @@
     
     function saveThePage(){
     
-        const href = new URLSearchParams(window.location.href);
+        const href = window.location.href;
 
         const idx = href.lastIndexOf("?");
         const test = idx == -1 ? href : href.substr(0,idx);
