@@ -22,11 +22,10 @@
             return;
         }
     
-        fetch(
-            "https://3gcz9n84yb.execute-api.us-east-1.amazonaws.com/default/fitnesse-grabber",
+        const task = fetch(
+            "https://4w05r72oja.execute-api.us-east-1.amazonaws.com/test/",
             {
                 method: "POST",
-                mode: "no-cors",
                 
                 headers: {
                     "Accept" : "application/json",
@@ -36,8 +35,30 @@
                     url: url.href,
                     dir: prefix })});        
 
-        window.open(s3_url);       
+        task
+        .then(res => res.json() )
+        .then(t => {
+
+            if (t.failures.length > 0 ) {
+
+                const reason = t.failures[0].reason;
+                alert( 
+                    `Got into some troubles. Reason: ${reason}`);
+                return;
+
+            }
+
+            const arn = t.tasks[0].taskArn;
+            const taskId = arn.substr(arn.lastIndexOf("/") + 1);
+
+            const statusPage=
+                "https://rmad-fitnesse-results.s3.amazonaws.com/ecs_request.html";
+            
+            window.open(
+                `${statusPage}?taskId=${taskId}&s3Url=${s3_url}`)
+
+        });
 
     }
-    
+
 </script>

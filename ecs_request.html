@@ -53,8 +53,7 @@
             task_url,
             cw_url,
             taskId,
-            status,
-            error: false
+            status
     }});
 
     let url = "https://4w05r72oja.execute-api.us-east-1.amazonaws.com/test/ecs";
@@ -68,19 +67,6 @@
             app.status = 
                 t.tasks.length > 0 ? 
                 t.tasks[0].lastStatus : t.failures[0].reason;
-            
-            app.error = t.failures.length > 0;
-
-            if (t.tasks.length > 0 && app.s3_url == ""){
-
-                const cmd = t.tasks[0].overrides.containerOverrides[0].command;
-                const url = new URL(cmd[2]);
-                const prefix = cmd[3];
-
-                const s3 = "https://rmad-fitnesse-results.s3.amazonaws.com/";
-                app.s3_url = `${s3}${prefix}${url.pathname}.html`;
-
-            }
 
         });}
 
