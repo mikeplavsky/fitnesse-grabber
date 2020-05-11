@@ -37,14 +37,12 @@
 <script>
 
     const params = new URLSearchParams(window.location.search);
-
-    const s3_url = params.get("url");
     const taskId = params.get("taskId");
 
     const app = new Vue({
         el: "#app",
         data: {
-            s3_url: s3_url,		
+            s3_url: "",		
             taskId,
             status,
             error: false
@@ -63,6 +61,17 @@
                 t.tasks[0].lastStatus : t.failures[0].reason;
             
             app.error = t.failures.length > 0;
+
+            if (t.tasks.length > 0 && app.s3_url == ""){
+
+                const cmd = t.tasks[0].overrides.containerOverrides[0].command;
+                const url = new URL(cmd[2]);
+                const prefix = cmd[3];
+
+                const s3 = "https://rmad-fitnesse-results.s3.amazonaws.com/";
+                app.s3_url = `${s3}${prefix}${url.pathname}.html`;
+
+            }
 
         });}
 
