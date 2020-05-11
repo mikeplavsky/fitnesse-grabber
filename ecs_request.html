@@ -14,21 +14,18 @@
 
     <div id="app" class="container">
 
-        <p v-if="error">
-            Something went wrong :( Call your captain! 
-        </p>
-        <p v-else-if="status=='STOPPED'">
+        <p v-if="status=='STOPPED'">
             <a v-bind:href="s3_url">S3</a> is ready. 
         </p>
         <p v-else>
 
-            <a v-bind:href="s3_url">S3</a> will be ready in 2-5 min.
-            Until it it is not, <a v-bind:href="s3_url">S3</a> will say Access Denied. 
+            <a v-bind:href="s3_url">S3</a> should be ready in 2-5 min.
+            Until it it is not, <a v-bind:href="s3_url">S3</a> may say "Access Denied" 
 
         </p>
 
-        Task: <a v-bind:href="task_url">{{taskId}}</a></br>
-        Status: {{status}}
+        Task: <a v-bind:href="cw_url">{{taskId}}</a></br>
+        Status: <a v-bind:href="task_url">{{status}}</a>
 
     </div>
 
@@ -37,13 +34,24 @@
 <script>
 
     const params = new URLSearchParams(window.location.search);
+
     const taskId = params.get("taskId");
+    const s3Url = params.get("s3Url");
+
+    const aws = 
+        "https://console.aws.amazon.com/ecs/home?region=us-east-1#/clusters/FitnesseFargate/tasks/";
+    const task_url = `${aws}${taskId}`;
+
+    const cw = 
+        "https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#logsV2:log-groups/log-group/$252Fecs$252Ffitnesse-grabber/log-events/ecs$252Ffitnesse-grabber$252F";
+    const cw_url = `${cw}${taskId}`;
 
     const app = new Vue({
         el: "#app",
         data: {
-            s3_url: "",		
-            task_url: "",
+            s3_url: s3Url,		
+            task_url,
+            cw_url,
             taskId,
             status,
             error: false
@@ -72,16 +80,22 @@
                 const s3 = "https://rmad-fitnesse-results.s3.amazonaws.com/";
                 app.s3_url = `${s3}${prefix}${url.pathname}.html`;
 
-                const aws = 
-                    "https://console.aws.amazon.com/ecs/home?region=us-east-1#/clusters/FitnesseFargate/tasks/";
-                app.task_url = `${aws}${app.taskId}`
-
             }
 
         });}
 
     getEcsStatus(); 
-    setInterval(getEcsStatus,10000);     
+
+    const id = setInterval(() => {
+
+        if (app.status == 'STOPPED') {
+            clearInterval(id);
+            return;
+        } 
+
+        getEcsStatus();
+
+    },10000);     
 
 </script>
 
