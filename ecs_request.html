@@ -13,12 +13,23 @@
 <body class="jumbotron">
 
     <div id="app" class="container">
-        <p>
+
+        <p v-if="error">
+            Something went wrong :( Call your captain! 
+        </p>
+        <p v-else-if="status=='STOPPED'">
+            <a v-bind:href="s3_url">S3</a> is ready. 
+        </p>
+        <p v-else>
+
             <a v-bind:href="s3_url">S3</a> will be ready in 2-5 min.
             Until it it is not, <a v-bind:href="s3_url">S3</a> will say Access Denied. 
+
         </p>
+
         Task: {{taskId}} </br>
         Status: {{status}}
+
     </div>
 
 </body>
@@ -35,18 +46,28 @@
         data: {
             s3_url: s3_url,		
             taskId,
-            status
+            status,
+            error: false
     }});
 
     let url = "https://4w05r72oja.execute-api.us-east-1.amazonaws.com/test/ecs";
 
-    fetch(`${url}?taskId=${taskId}`)
-    .then(res => res.json())
-    .then(t => {
-        app.status = 
-            t.tasks.length > 0 ? 
-            t.tasks[0].lastStatus : t.failures[0].reason;
-    });    
+    let getEcsStatus = () => {
+
+        fetch(`${url}?taskId=${taskId}`)
+        .then(res => res.json())
+        .then(t => {
+
+            app.status = 
+                t.tasks.length > 0 ? 
+                t.tasks[0].lastStatus : t.failures[0].reason;
+            
+            app.error = t.failures.length > 0;
+
+        });}
+
+    getEcsStatus(); 
+    setInterval(getEcsStatus,10000);     
 
 </script>
 
