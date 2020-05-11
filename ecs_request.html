@@ -44,7 +44,7 @@
 
     const cw = 
         "https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#logsV2:log-groups/log-group/$252Fecs$252Ffitnesse-grabber/log-events/ecs$252Ffitnesse-grabber$252F";
-    const cw_url = `${cw}${taskId}`;
+    const cw_url = `${cw}${taskId}$3Fstart$3D-3600000`;
 
     const app = new Vue({
         el: "#app",
