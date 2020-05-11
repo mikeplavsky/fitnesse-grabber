@@ -27,7 +27,7 @@
 
         </p>
 
-        Task: {{taskId}} </br>
+        Task: <a v-bind:href="task_url">{{taskId}}</a></br>
         Status: {{status}}
 
     </div>
@@ -43,6 +43,7 @@
         el: "#app",
         data: {
             s3_url: "",		
+            task_url: "",
             taskId,
             status,
             error: false
@@ -70,6 +71,10 @@
 
                 const s3 = "https://rmad-fitnesse-results.s3.amazonaws.com/";
                 app.s3_url = `${s3}${prefix}${url.pathname}.html`;
+
+                const aws = 
+                    "https://console.aws.amazon.com/ecs/home?region=us-east-1#/clusters/FitnesseFargate/tasks/";
+                app.task_url = `${aws}${app.taskId}`
 
             }
 
