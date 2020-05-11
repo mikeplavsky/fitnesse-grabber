@@ -1,9 +1,11 @@
 <head>
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
-
+    <link rel="stylesheet" 
+        href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" 
+        integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" 
+        crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 
 </head>
@@ -11,15 +13,12 @@
 <body class="jumbotron">
 
     <div id="app" class="container">
-
-        <p v-if="localhost" >
-            For saving to S3 the full builder name must be used - <i>localhost</i> will not work.
-        </p>
-        <p v-else>
+        <p>
             <a v-bind:href="s3_url">S3</a> will be ready in 2-5 min.
             Until it it is not, <a v-bind:href="s3_url">S3</a> will say Access Denied. 
         </p>
-
+        Task: {{taskId}} </br>
+        Status: {{status}}
     </div>
 
 </body>
@@ -27,43 +26,27 @@
 <script>
 
     const params = new URLSearchParams(window.location.search);
-    const query = params.get("url");
 
-    const idx = query.lastIndexOf("?");
-    const test = idx == -1 ? query : query.substr(0,idx);
-
-    const url = new URL(test);
-    const prefix = (new Date()).toISOString();
-
-    const s3 = "https://rmad-fitnesse-results.s3.amazonaws.com/";
-    const s3_url = `${s3}${prefix}${url.pathname}.html`;
-
-    const localhost = url.host.startsWith("localhost");
-
-    if (!localhost) {
-
-        fetch(
-            "https://3gcz9n84yb.execute-api.us-east-1.amazonaws.com/default/fitnesse-grabber",
-            {
-                method: "POST",
-                mode: "no-cors",
-
-                headers: {
-                    "Accept" : "application/json",
-                    'Content-Type': 'application/json'},
-
-                body: JSON.stringify({
-                    url: url.href,
-                    dir: prefix })});  
-
-    }
+    const s3_url = params.get("url");
+    const taskId = params.get("taskId");
 
     const app = new Vue({
         el: "#app",
         data: {
             s3_url: s3_url,		
-            localhost
-        }});
+            taskId,
+            status
+    }});
+
+    let url = "https://4w05r72oja.execute-api.us-east-1.amazonaws.com/test/ecs";
+
+    fetch(`${url}?taskId=${taskId}`)
+    .then(res => res.json())
+    .then(t => {
+        app.status = 
+            t.tasks.length > 0 ? 
+            t.tasks[0].lastStatus : t.failures[0].reason;
+    });    
 
 </script>
 
