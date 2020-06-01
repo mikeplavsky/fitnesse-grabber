@@ -23,7 +23,7 @@
         }
     
         const task = fetch(
-            "https://4w05r72oja.execute-api.us-east-1.amazonaws.com/test/",
+            "https://4w05r72oja.execute-api.us-east-1.amazonaws.com/prod/",
             {
                 method: "POST",
                 
@@ -32,6 +32,8 @@
                     'Content-Type': 'application/json'},
                     
                 body: JSON.stringify({
+                    subnet: "<subnet-id>",
+                    sg: "<sg-id>",
                     url: url.href,
                     dir: prefix })});        
 
